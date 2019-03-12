@@ -1,5 +1,5 @@
 # gotravel
 ````
-codding
+let's go travel with golang.
 ````
 
