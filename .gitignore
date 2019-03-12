@@ -1,0 +1,7 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea/
+travel/*.iml
+homeward/*.iml
+prepare/*.iml
+show/show.iml
+tool/tool.iml
