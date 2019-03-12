@@ -60,4 +60,5 @@ func Http_post_form(postUrl string) string {
 	}
 
 	fmt.Println(string(body))
+	return string(body)
 }
