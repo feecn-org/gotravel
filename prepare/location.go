@@ -1,11 +1,13 @@
 package prepare
 
+import "gotravel/tool"
+
 const (
-	SOURCE_LOCATION = "www.hao123.com"
+	SourceLocation = "www.hao123.com"
 )
 
 func loadSourceLocation() {
-	//http.Post(SOURCE_LOCATION);
+	println(tool.Http_Get(SourceLocation))
 }
 
 func getMyLocation() map[string]string {
