@@ -8,24 +8,24 @@ import (
 )
 
 const (
-	host     = "localhost"
+	host     = "192.168.128.147"
 	port     = 5432
-	user     = "postgres"
-	password = "your_password"
-	dbName   = "your_db_name"
+	user     = "admin"
+	password = "123456"
+	dbName   = "my_db"
 )
 
-func main() {
-
-	user := &UserTbl{
-		Id:       1,
-		Username: "Windows",
-		Sex:      1,
-		Info:     "操作系统",
-	}
-
-	SessionUserTest(user)
-}
+//func main() {
+//
+//	user := &UserTbl{
+//		Id:       1,
+//		Username: "Windows",
+//		Sex:      1,
+//		Info:     "操作系统",
+//	}
+//
+//	SessionUserTest(user)
+//}
 
 func getDBEngine() *xorm.Engine {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbName)
@@ -52,6 +52,10 @@ type UserTbl struct {
 	Username string
 	Sex      int
 	Info     string
+}
+
+func selectByCondion(sql string) {
+
 }
 
 //查询所有
@@ -159,11 +163,11 @@ func SessionUserTest(user *UserTbl) {
 		log.Fatal(err)
 	}
 
-	_, err = session.Delete(user)
-	if err != nil {
-		session.Rollback()
-		log.Fatal(err)
-	}
+	//_, err = session.Delete(user)
+	//if err != nil {
+	//	session.Rollback()
+	//	log.Fatal(err)
+	//}
 
 	err = session.Commit()
 	if err != nil {
