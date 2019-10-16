@@ -17,6 +17,7 @@ func runMarkDestion(k string, v string) {
 }
 
 func run(k string, v string) {
-	//execute request get
+	//execute request get and download data
 	//tool.Http_Get()
+
 }
