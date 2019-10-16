@@ -1,20 +1,18 @@
 package prepare
 
-import "gotravel/tool"
-
-const (
-	SourceLocation = "www.hao123.com"
-)
-
-func LoadSourceLocation() map[string]string {
+func LoadSourceLocation() map[string]DestinationReq {
 	return getMyLocation()
 }
 
-func getMyLocation() map[string]string {
-	var locationMap map[string]string
-	locationMap = make(map[string]string)
-	locationMap["baidu"] = tool.SEARCH_BAIDU
-	locationMap["location2"] = "b"
-	//locationMap[ =""
+func getMyLocation() map[string]DestinationReq {
+	var locationMap map[string]DestinationReq
+	locationMap = make(map[string]DestinationReq)
+	locationMap["localTest"] = DestinationReq{
+		doName: "http://192.168.128.149",
+		uri:    "/uat/get",
+		method: "Get",
+		param:  map[string]string{"param": "yes"},
+	}
+
 	return locationMap
 }

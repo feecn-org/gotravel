@@ -1,108 +1,143 @@
 package tool
 
 import (
+	"crypto/tls"
+	"encoding/json"
+	"errors"
 	"fmt"
-	"github.com/wonderivan/logger"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 )
 
-const (
-	ContentType     = "Content-Type"
-	ContentTypeJson = "application/json"
-	ContentTypeForm = "application/x-www-form-urlencoded"
-	MethodPost      = "POST"
-	MethodGet       = "Get"
-	Cookie          = "cookie"
+var (
+	GET_METHOD    = "GET"
+	POST_METHOD   = "POST"
+	SENDTYPE_FROM = "from"
+	SENDTYPE_JSON = "json"
 )
 
-/**
-http get request
-*/
-func Http_Get(getUrl string) string {
-	resp, err := http.Get(getUrl)
-	if err != nil {
-		logger.Error(err)
-	}
-	err = resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		logger.Error(err)
-		// handle error
-	}
-	fmt.Println(string(body))
-	return string(body)
+type HttpSend struct {
+	Link     string
+	SendType string
+	Header   map[string]string
+	Body     map[string]string
+	sync.RWMutex
 }
 
-/**
-http post request json
-*/
-func Http_Post(postUrl string) string {
-	resp, err := http.Post(postUrl, ContentTypeJson, strings.NewReader("body"))
-	if err != nil {
-		logger.Error(err)
+func NewHttpSend(link string) *HttpSend {
+	return &HttpSend{
+		Link:     link,
+		SendType: SENDTYPE_FROM,
 	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		logger.Error(err)
-		// handle error
-	}
-	fmt.Println(string(body))
-	return string(body)
 }
 
-/**
-http post form
-*/
-func Http_Post_Form(postUrl string) string {
-	resp, err := http.PostForm(postUrl,
-		url.Values{"key": {"Value"}, "id": {"123"}})
-
-	if err != nil {
-		logger.Error(err)
-		// handle error
-	}
-
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		logger.Error(err)
-		// handle error
-	}
-
-	fmt.Println(string(body))
-	return string(body)
+func (h *HttpSend) SetBody(body map[string]string) {
+	h.Lock()
+	defer h.Unlock()
+	h.Body = body
 }
 
-/**
-http request with header and cookie
-*/
-func httpDo(method string, urlStr string, header string, cookie string) string {
-	client := &http.Client{}
+func (h *HttpSend) SetHeader(header map[string]string) {
+	h.Lock()
+	defer h.Unlock()
+	h.Header = header
+}
 
-	req, err := http.NewRequest(method, urlStr, strings.NewReader(header))
-	if err != nil {
-		logger.Error(err)
-		// handle error
+func (h *HttpSend) SetSendType(send_type string) {
+	h.Lock()
+	defer h.Unlock()
+	h.SendType = send_type
+}
+
+func (h *HttpSend) Post() ([]byte, error) {
+	return h.send(POST_METHOD)
+}
+
+func (h *HttpSend) Get() ([]byte, error) {
+	return h.send(GET_METHOD)
+}
+
+func GetUrlBuild(link string, data map[string]string) string {
+	u, _ := url.Parse(link)
+	q := u.Query()
+	for k, v := range data {
+		q.Set(k, v)
+	}
+	u.RawQuery = q.Encode()
+	return u.String()
+}
+
+func (h *HttpSend) send(method string) ([]byte, error) {
+	var (
+		req       *http.Request
+		resp      *http.Response
+		client    http.Client
+		send_data string
+		err       error
+	)
+
+	if len(h.Body) > 0 {
+		if strings.ToLower(h.SendType) == SENDTYPE_JSON {
+			send_body, json_err := json.Marshal(h.Body)
+			if json_err != nil {
+				return nil, json_err
+			}
+			send_data = string(send_body)
+		} else {
+			send_body := http.Request{}
+			send_body.ParseForm()
+			for k, v := range h.Body {
+				send_body.Form.Add(k, v)
+			}
+			send_data = send_body.Form.Encode()
+		}
 	}
 
-	req.Header.Set(ContentType, ContentTypeForm)
-	//req.Header.Set(Cookie, "name=anny")
-	req.Header.Set(Cookie, cookie)
+	//忽略https的证书
+	client.Transport = &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
 
-	resp, err := client.Do(req)
+	req, err = http.NewRequest(method, h.Link, strings.NewReader(send_data))
+	if err != nil {
+		return nil, err
+	}
+	defer req.Body.Close()
 
+	//设置默认header
+	if len(h.Header) == 0 {
+		//json
+		if strings.ToLower(h.SendType) == SENDTYPE_JSON {
+			h.Header = map[string]string{
+				"Content-Type": "application/json; charset=utf-8",
+			}
+		} else { //form
+			h.Header = map[string]string{
+				"Content-Type": "application/x-www-form-urlencoded",
+			}
+		}
+	}
+
+	for k, v := range h.Header {
+		if strings.ToLower(k) == "host" {
+			req.Host = v
+		} else {
+			req.Header.Add(k, v)
+		}
+	}
+
+	resp, err = client.Do(req)
+	if err != nil {
+		return nil, err
+	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		logger.Error(err)
-		// handle error
+	if resp.StatusCode != http.StatusOK {
+		return nil, errors.New(fmt.Sprintf("error http code :%d", resp.StatusCode))
 	}
 
-	fmt.Println(string(body))
-	return string(body)
+	return ioutil.ReadAll(resp.Body)
 }
