@@ -6,14 +6,14 @@ const (
 	SourceLocation = "www.hao123.com"
 )
 
-func loadSourceLocation() {
-	println(tool.Http_Get(SourceLocation))
+func LoadSourceLocation() map[string]string {
+	return getMyLocation()
 }
 
 func getMyLocation() map[string]string {
 	var locationMap map[string]string
 	locationMap = make(map[string]string)
-	locationMap["location1"] = "a"
+	locationMap["baidu"] = tool.SEARCH_BAIDU
 	locationMap["location2"] = "b"
 	//locationMap[ =""
 	return locationMap

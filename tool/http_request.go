@@ -2,6 +2,7 @@ package tool
 
 import (
 	"fmt"
+	"github.com/wonderivan/logger"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -23,10 +24,12 @@ http get request
 func Http_Get(getUrl string) string {
 	resp, err := http.Get(getUrl)
 	if err != nil {
+		logger.Error(err)
 	}
 	err = resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		logger.Error(err)
 		// handle error
 	}
 	fmt.Println(string(body))
@@ -39,10 +42,12 @@ http post request json
 func Http_Post(postUrl string) string {
 	resp, err := http.Post(postUrl, ContentTypeJson, strings.NewReader("body"))
 	if err != nil {
+		logger.Error(err)
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		logger.Error(err)
 		// handle error
 	}
 	fmt.Println(string(body))
@@ -57,12 +62,14 @@ func Http_Post_Form(postUrl string) string {
 		url.Values{"key": {"Value"}, "id": {"123"}})
 
 	if err != nil {
+		logger.Error(err)
 		// handle error
 	}
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		logger.Error(err)
 		// handle error
 	}
 
@@ -78,6 +85,7 @@ func httpDo(method string, urlStr string, header string, cookie string) string {
 
 	req, err := http.NewRequest(method, urlStr, strings.NewReader(header))
 	if err != nil {
+		logger.Error(err)
 		// handle error
 	}
 
@@ -91,6 +99,7 @@ func httpDo(method string, urlStr string, header string, cookie string) string {
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		logger.Error(err)
 		// handle error
 	}
 
