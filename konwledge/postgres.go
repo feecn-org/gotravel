@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/go-xorm/xorm"
 	_ "github.com/lib/pq"
+	//"gotravel/prepare"
 	"log"
 )
 
@@ -13,6 +14,7 @@ const (
 	user     = "admin"
 	password = "123456"
 	dbName   = "my_db"
+	schema   = "marcopolo_gotravel"
 )
 
 //func main() {
@@ -28,7 +30,7 @@ const (
 //}
 
 func getDBEngine() *xorm.Engine {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbName)
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable ", host, port, user, password, dbName)
 	//格式
 	engine, err := xorm.NewEngine("postgres", psqlInfo)
 	if err != nil {
@@ -54,9 +56,13 @@ type UserTbl struct {
 	Info     string
 }
 
-func selectByCondion(sql string) {
-
-}
+//func SelectByCondion(sql string,pojo interface{}) interface{}{
+//	var obj []prepare.DestinationReq
+//	engine := getDBEngine()
+//	i := &pojo
+//	engine.SQL(sql).Find(&i)
+//	return i
+//}
 
 //查询所有
 func selectAll() {

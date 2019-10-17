@@ -1,6 +1,8 @@
 package konwledge
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestInsterBody(t *testing.T) {
 	user := &UserTbl{
@@ -13,4 +15,11 @@ func TestInsterBody(t *testing.T) {
 	SessionUserTest(user)
 
 	selectAll()
+}
+
+func TestOxm(t *testing.T) {
+	//sql := "select * from user_tbl"
+	//var user []UserTbl
+	//condion := SelectByCondion(sql, user)
+	//logger.Debug(condion)
 }
