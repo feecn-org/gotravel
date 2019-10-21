@@ -19,7 +19,3 @@ func main() {
 	//println(tool.Http_Get("https://www.hao123.com"))
 	//osCmd()
 }
-
-func osCmd() {
-	cmd.OsCmd()
-}
