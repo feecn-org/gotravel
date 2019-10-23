@@ -9,6 +9,7 @@ import (
 )
 
 var callCount = 0
+
 var failedCount = 0
 
 func Mark(destination map[string]prepare.DestinationReq) string {
@@ -35,6 +36,7 @@ func runMarkDestination(v prepare.DestinationReq) {
 				mString := string(markInfoJson)
 				mark := &konwledge.Mark{
 					Body: mString,
+					Page: positionURL.(string),
 				}
 				konwledge.InsertMark(mark)
 				var destination prepare.DestinationReq

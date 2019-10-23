@@ -1,8 +1,7 @@
 # gotravel
 ````
-let's go travel with golang.
+cn : golang 定向爬虫
 ````
-#收集数据至数据库等
 ````
-
+en : Directional crawler
 ````
