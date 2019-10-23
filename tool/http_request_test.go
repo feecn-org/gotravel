@@ -1,12 +1,15 @@
 package tool
 
 import (
+	"fmt"
 	"github.com/wonderivan/logger"
+	"strconv"
 	"testing"
+	"time"
 )
 
 func Test_Get(t *testing.T) {
-	h := NewHttpSend(GetUrlBuild("http://127.0.0.1/test.php", map[string]string{"name": "xiaochuan"}))
+	h := NewHttpSend(GetUrlBuild("https://jobs.zhaopin.com/000054844250055.htm", map[string]string{}))
 	_, err := h.Get()
 	if err != nil {
 		t.Error("请求错误:", err)
@@ -50,13 +53,12 @@ func Test_Json(t *testing.T) {
 }
 
 func Benchmark_GET(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		h := NewHttpSend(GetUrlBuild("http://127.0.0.1/test.php", map[string]string{"name": "xiaochuan"}))
-		_, err := h.Get()
-		if err != nil {
-			b.Error("请求错误:", err)
-		} else {
-			b.Log("正常返回")
-		}
-	}
+	formatInt := strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
+	logger.Debug(formatInt)
+	now := time.Now()
+	year, mon, day := now.UTC().Date()
+	hour, min, sec := now.UTC().Clock()
+	zone, _ := now.UTC().Zone()
+	fmt.Printf("UTC 时间是 %d-%d-%d %02d:%02d:%02d %s\n",
+		year, mon, day, hour, min, sec, zone)
 }

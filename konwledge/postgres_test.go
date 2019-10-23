@@ -1,6 +1,7 @@
 package konwledge
 
 import (
+	"github.com/wonderivan/logger"
 	"testing"
 )
 
@@ -18,8 +19,17 @@ func TestInsterBody(t *testing.T) {
 }
 
 func TestOxm(t *testing.T) {
-	//sql := "select * from user_tbl"
-	//var user []UserTbl
-	//condion := SelectByCondion(sql, user)
-	//logger.Debug(condion)
+	mark := &Mark{
+		Id:   1,
+		Body: "11",
+	}
+	engine := getDBEngine()
+	session := engine.NewSession()
+	session.Begin()
+	_, err := session.Insert(mark)
+	logger.Debug(err)
+	err = session.Commit()
+	if err != nil {
+	}
+	//InsertMark(mark)
 }

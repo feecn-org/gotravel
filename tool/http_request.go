@@ -100,7 +100,6 @@ func (h *HttpSend) send(method string) ([]byte, error) {
 	client.Transport = &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
-
 	req, err = http.NewRequest(method, h.Link, strings.NewReader(send_data))
 	if err != nil {
 		return nil, err

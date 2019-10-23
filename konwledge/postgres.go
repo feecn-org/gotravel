@@ -14,7 +14,6 @@ const (
 	user     = "admin"
 	password = "123456"
 	dbName   = "my_db"
-	schema   = "marcopolo_gotravel"
 )
 
 //func main() {
@@ -70,6 +69,19 @@ func selectAll() {
 	engine := getDBEngine()
 	engine.SQL("select * from user_tbl").Find(&user)
 	fmt.Println(user)
+}
+
+func InsertMark(mark *Mark) bool {
+	engine := getDBEngine()
+	rows, err := engine.Insert(mark)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+	if rows == 0 {
+		return false
+	}
+	return true
 }
 
 //条件查询
@@ -156,6 +168,7 @@ func SessionUserTest(user *UserTbl) {
 	engine := getDBEngine()
 	session := engine.NewSession()
 	session.Begin()
+
 	_, err := session.Insert(user)
 	if err != nil {
 		session.Rollback()

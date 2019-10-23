@@ -1,19 +1,28 @@
 package prepare
 
 /**
-招聘页详情
+doc详情
 */
 type Document struct {
-	company string
-	jobName string
+	company Company
+	job     Job
+	time    string
 }
 
-func NewDocument(company string, jobName string) *Document {
-	return &Document{company: company, jobName: jobName}
+func NewDocument(company Company, job Job, time string) *Document {
+	return &Document{company: company, job: job, time: time}
 }
 
-type company struct {
+type Company struct {
+	name     string
+	link     string
+	desc     string
+	location string
+	types    string
 }
 
-type job struct {
+type Job struct {
+	name   string
+	salary string
+	desc   string
 }

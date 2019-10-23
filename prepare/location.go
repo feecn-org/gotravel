@@ -17,14 +17,14 @@ func getMyLocation() map[string]DestinationReq {
 	//	param:  map[string]string{"param": "yes","and":"jack"},
 	//}
 
-	locationMap["localTest"] = DestinationReq{
-		doName: "https://jobs.zhaopin.com/CC300184216J00095339615.htm",
-		method: "Get",
-		param:  map[string]string{},
-	}
+	//locationMap["localTest"] = DestinationReq{
+	//	doName: "https://jobs.zhaopin.com/CC300184216J00095339615.htm",
+	//	method: "Get",
+	//	param:  map[string]string{},
+	//}
 
 	locationMap["zhaopin"] = DestinationReq{
-		doName: "http://fe-api.zhaopin.com",
+		doName: "https://fe-api.zhaopin.com",
 		uri:    "/c/i/sou",
 		method: "Get",
 		param: map[string]string{"pageSize": "90", "cityId": "530", "workExperience": "-1", "education": "-1", "companyType": "-1", "employmentType": "-1",

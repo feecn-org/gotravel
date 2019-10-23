@@ -8,8 +8,8 @@
     "filename": "./logs/app.log",
     "level": "TRAC",
     "daily": true,
-    "maxlines": 1000000,
-    "maxsize": 1,
+    "maxlines": 900000000,
+    "maxsize": 100,
     "maxdays": -1,
     "append": true,
     "permit": "0660"

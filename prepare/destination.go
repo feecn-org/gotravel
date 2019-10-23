@@ -3,9 +3,12 @@ package prepare
 type DestinationReq struct {
 	doName string
 	uri    string
-	body   map[string]string
 	method string
 	param  map[string]string
+}
+
+func NewDestinationReq(doName string, uri string, method string, param map[string]string) *DestinationReq {
+	return &DestinationReq{doName: doName, uri: uri, method: method, param: param}
 }
 
 func (d *DestinationReq) Param() map[string]string {
@@ -24,14 +27,6 @@ func (d *DestinationReq) SetMethod(method string) {
 	d.method = method
 }
 
-func (d *DestinationReq) Body() map[string]string {
-	return d.body
-}
-
-func (d *DestinationReq) SetBody(body map[string]string) {
-	d.body = body
-}
-
 func (d *DestinationReq) Uri() string {
 	return d.uri
 }
@@ -46,8 +41,4 @@ func (d *DestinationReq) DoName() string {
 
 func (d *DestinationReq) SetDoName(doName string) {
 	d.doName = doName
-}
-
-func NewDestinationReq(doName string, uri string, body map[string]string, method string, param map[string]string) *DestinationReq {
-	return &DestinationReq{doName: doName, uri: uri, body: body, method: method, param: param}
 }
